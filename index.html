@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FZ5P576YSJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FZ5P576YSJ');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advent Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .day {
+            background-color: #e2e2e2;
+            border: 2px solid #cccccc;
+            border-radius: 5px;
+            padding: 20px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .day:hover {
+            background-color: #d4d4d4;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .modal-content p {
+            margin: 20px 0;
+        }
+        .close {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .close:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advent Calendar</h1>
+    <div class="calendar"></div>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <p id="verse"></p>
+            <button class="close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    <script>
+        const verses = [
+            { day: 1, reference: "John 14:27", verse: "I leave the gift of peace with you—my peace. Not the kind of fragile peace given by the world, but my perfect peace. Don’t yield to fear or be troubled in your hearts—instead, be courageous!" },
+            { day: 2, reference: "Philippians 4:7", verse: "And the peace of God, which transcends all understanding, will guard your heart and mind through Jesus Christ." },
+            { day: 3, reference: "2 Thessalonians 3:16", verse: "Now may the Lord himself, the Lord of peace, pour into you his peace in every circumstance and in every possible way. The Lord’s tangible presence be with you all." },
+            { day: 4, reference: "Isaiah 9:6", verse: "For a child has been born for us; a son has been given to us. The responsibility of complete dominion will rest on his shoulders, and his name will be: Wonderful One, Counselor, the Mighty God, the Father of Eternity, the Prince of Peace." },
+            { day: 5, reference: "Romans 15:13", verse: "May the God of hope fill you with all joy and peace as you trust in him, so that you may overflow with hope by the power of the Holy Spirit." },
+            { day: 6, reference: "Romans 8:6", verse: "For the mindset of the flesh is death, but the mindset controlled by the Spirit finds life and peace." },
+            { day: 7, reference: "Isaiah 52:7", verse: "How beautiful upon the mountains are the feet of the messenger bringing good news, proclaiming peace, announcing salvation, and saying to Zion, 'Your Mighty God reigns!'" },
+            { day: 8, reference: "John 16:33", verse: "And everything I’ve taught you is so that the peace which is in me will be in you and will give you great confidence as you rest in me." },
+            { day: 9, reference: "Philippians 4:6-7", verse: "Don’t be pulled in different directions or worried about a thing. Be saturated in prayer throughout each day, offering your faith-filled requests before God with overflowing gratitude." },
+            { day: 10, reference: "Psalm 34:14", verse: "Turn away from evil and do what is right. Let peace be your pursuit and aim." },
+            { day: 11, reference: "Isaiah 26:3", verse: "You will keep him in perfect peace whose mind is stayed on you, because he trusts in you." },
+            { day: 12, reference: "Isaiah 32:18", verse: "My people will live free from worry, in secure homes and safe, quiet resting places." },
+            { day: 13, reference: "Ephesians 2:14", verse: "For he is our peace, the one who has made us one and has broken down the barrier of hostility dividing us." },
+            { day: 14, reference: "Psalm 85:10", verse: "Mercy kisses all his godly lovers, from every direction they come to meet with him. Righteousness and peace kiss each other." },
+            { day: 15, reference: "Romans 14:17", verse: "For the Kingdom of God is not a matter of rules about food and drink, but it is in the realm of the Holy Spirit, filled with righteousness, peace, and joy." },
+            { day: 16, reference: "Psalm 85:8", verse: "I will listen carefully to what God the Lord is saying, for he speaks peace to his faithful people. But let them not return to their foolish ways." },
+            { day: 17, reference: "Psalm 37:11", verse: "Lovers of God have been given peace, prosperity, and an abundant life forever." },
+            { day: 18, reference: "Ephesians 4:3", verse: "Make every effort to preserve the unity the Spirit has already created, with peace binding you together." },
+            { day: 19, reference: "James 3:17", verse: "But the wisdom from above is always pure, filled with peace, considerate, and teachable." },
+            { day: 20, reference: "Psalm 119:165", verse: "Great peace belongs to those who love your Word; they will never stumble." },
+            { day: 21, reference: "Micah 5:5", verse: "And he will be our source of peace..." },
+            { day: 22, reference: "James 3:18", verse: "The harvest of righteousness is sown in peace by those who make peace." },
+            { day: 23, reference: "Jude 1:2", verse: "May mercy, peace, and love cascade over you endlessly!" },
+            { day: 24, reference: "Luke 2:14", verse: "Glory to God in the highest realms of heaven! For there is peace and a good hope given to the sons of men." },
+            { day: 25, reference: "Luke 2:11", verse: "For today in Bethlehem a rescuer was born for you. He is the Lord Yahweh, the Messiah." }
+        ];
+
+        const calendar = document.querySelector(".calendar");
+
+        // Generate the calendar days
+        verses.forEach(({ day }) => {
+            const dayElement = document.createElement("div");
+            dayElement.className = "day";
+            dayElement.innerText = `Day ${day}`;
+            dayElement.onclick = () => showVerse(day);
+            calendar.appendChild(dayElement);
+        });
+
+        // Show modal with verse
+        function showVerse(day) {
+            const { verse, reference } = verses.find(v => v.day === day);
+            document.getElementById("verse").innerText = `${verse}\n\n(${reference})`;
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
